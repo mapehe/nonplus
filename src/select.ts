@@ -14,30 +14,30 @@ export interface IncompleteQuery {
 }
 
 const toStringFactory =
-  (terms: string[], tableName: string, whereStatement?: string) => () =>
+  (terms: string[], tableName: string, whereClause?: string) => () =>
     `SELECT ${terms.join(", ")} FROM ${tableName}${
-      whereStatement ? ` WHERE ${whereStatement}` : ""
+      whereClause ? ` WHERE ${whereClause}` : ""
     }`;
 
 const whereQueryFacory = (
   columns: string[],
   table: string,
-  whereStatement: string
+  whereClause: string
 ): WhereQuery => ({
-  toString: toStringFactory(columns, table, whereStatement),
-  and: (andStatement: string) =>
-    whereQueryFacory(columns, table, `${whereStatement} AND ${andStatement}`),
-  or: (andStatement: string) =>
-    whereQueryFacory(columns, table, `${whereStatement} OR ${andStatement}`),
+  toString: toStringFactory(columns, table, whereClause),
+  and: (andClause: string) =>
+    whereQueryFacory(columns, table, `${whereClause} AND ${andClause}`),
+  or: (orClause: string) =>
+    whereQueryFacory(columns, table, `${whereClause} OR ${orClause}`),
 });
 
 const whereFactory =
-  (columns: string[], table: string) => (whereStatement: string) => ({
-    toString: toStringFactory(columns, table, whereStatement),
-    and: (andStatement: string) =>
-      whereQueryFacory(columns, table, `${whereStatement} AND ${andStatement}`),
-    or: (andStatement: string) =>
-      whereQueryFacory(columns, table, `${whereStatement} OR ${andStatement}`),
+  (columns: string[], table: string) => (whereClause: string) => ({
+    toString: toStringFactory(columns, table, whereClause),
+    and: (andClause: string) =>
+      whereQueryFacory(columns, table, `${whereClause} AND ${andClause}`),
+    or: (orClause: string) =>
+      whereQueryFacory(columns, table, `${whereClause} OR ${orClause}`),
   });
 
 const fromFactory =
