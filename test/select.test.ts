@@ -10,7 +10,7 @@ describe("Table", () => {
       const third = "sex";
 
       const expected = `SELECT ${first}, ${second}, ${third} FROM ${table}`;
-      const query = select(first, second, third).from(table).toString();
+      const query = select(first, second, third).from(table).render();
 
       expect(query).toBe(expected);
     });
@@ -19,7 +19,7 @@ describe("Table", () => {
       const table = "table";
 
       const expected = `SELECT * FROM ${table}`;
-      const query = all.from(table).toString();
+      const query = all.from(table).render();
 
       expect(query).toBe(expected);
     });
@@ -37,7 +37,7 @@ describe("Table", () => {
       const query = select(first, second, third)
         .from(table)
         .where(`${first} > ${limit}`)
-        .toString();
+        .render();
 
       expect(query).toBe(expected);
     });
@@ -57,7 +57,7 @@ describe("Table", () => {
           .from(table)
           .where(`${first} > ${lowerLimit}`)
           .and(`${first} < ${upperLimit}`)
-          .toString();
+          .render();
 
         expect(query).toBe(expected);
       });
@@ -79,7 +79,7 @@ describe("Table", () => {
           .where(`${first} > ${lowerLimit}`)
           .and(`${first} < ${upperLimit}`)
           .and(`${second} < ${upperLimit2}`)
-          .toString();
+          .render();
 
         expect(query).toBe(expected);
 
@@ -91,7 +91,7 @@ describe("Table", () => {
           .and(`${first} < ${upperLimit}`)
           .and(`${second} < ${upperLimit2}`)
           .and(`${third} LIKE ${like}`)
-          .toString();
+          .render();
 
         expect(query2).toBe(expected2);
       });
@@ -112,7 +112,7 @@ describe("Table", () => {
           .from(table)
           .where(`${first} > ${lowerLimit}`)
           .or(`${first} < ${upperLimit}`)
-          .toString();
+          .render();
 
         expect(query).toBe(expected);
       });
@@ -134,7 +134,7 @@ describe("Table", () => {
           .where(`${first} > ${lowerLimit}`)
           .or(`${first} < ${upperLimit}`)
           .or(`${second} < ${upperLimit2}`)
-          .toString();
+          .render();
 
         expect(query).toBe(expected);
 
@@ -146,7 +146,7 @@ describe("Table", () => {
           .or(`${first} < ${upperLimit}`)
           .or(`${second} < ${upperLimit2}`)
           .or(`${third} LIKE ${like}`)
-          .toString();
+          .render();
 
         expect(query2).toBe(expected2);
       });
@@ -169,7 +169,7 @@ describe("Table", () => {
           .where(`${first} > ${lowerLimit}`)
           .or(`${first} < ${upperLimit}`)
           .and(`${second} < ${upperLimit2}`)
-          .toString();
+          .render();
 
         expect(query).toBe(expected);
 
@@ -181,7 +181,7 @@ describe("Table", () => {
           .and(`${first} < ${upperLimit}`)
           .or(`${second} < ${upperLimit2}`)
           .or(`${third} LIKE ${like}`)
-          .toString();
+          .render();
 
         expect(query2).toBe(expected2);
       });

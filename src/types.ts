@@ -1,11 +1,11 @@
 export interface WhereQuery {
-  toString: () => string;
+  render: () => string;
   and: (whereStatement: string) => WhereQuery;
   or: (whereStatement: string) => WhereQuery;
 }
 
 export interface Query {
-  toString: () => string;
+  render: () => string;
   where: (whereStatement: string) => WhereQuery;
 }
 
