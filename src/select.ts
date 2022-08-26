@@ -11,7 +11,7 @@ const whereQueryFacory = (
   table: string,
   whereClause: string
 ): WhereQuery => ({
-  toString: toStringFactory(columns, table, whereClause),
+  render: toStringFactory(columns, table, whereClause),
   and: (andClause: string) =>
     whereQueryFacory(columns, table, `${whereClause} AND ${andClause}`),
   or: (orClause: string) =>
@@ -20,7 +20,7 @@ const whereQueryFacory = (
 
 const whereFactory =
   (columns: string[], table: string) => (whereClause: string) => ({
-    toString: toStringFactory(columns, table, whereClause),
+    render: toStringFactory(columns, table, whereClause),
     and: (andClause: string) =>
       whereQueryFacory(columns, table, `${whereClause} AND ${andClause}`),
     or: (orClause: string) =>
@@ -30,7 +30,7 @@ const whereFactory =
 const fromFactory =
   (columns: string[]) =>
   (table: string): Query => ({
-    toString: toStringFactory(columns, table),
+    render: toStringFactory(columns, table),
     where: whereFactory(columns, table),
   });
 
