@@ -1,6 +1,7 @@
 export interface WhereQuery {
   toString: () => string;
   and: (whereStatement: string) => WhereQuery;
+  or: (whereStatement: string) => WhereQuery;
 }
 
 export interface Query {
@@ -26,6 +27,8 @@ const whereQueryFacory = (
   toString: toStringFactory(columns, table, whereStatement),
   and: (andStatement: string) =>
     whereQueryFacory(columns, table, `${whereStatement} AND ${andStatement}`),
+  or: (andStatement: string) =>
+    whereQueryFacory(columns, table, `${whereStatement} OR ${andStatement}`),
 });
 
 const whereFactory =
@@ -33,6 +36,8 @@ const whereFactory =
     toString: toStringFactory(columns, table, whereStatement),
     and: (andStatement: string) =>
       whereQueryFacory(columns, table, `${whereStatement} AND ${andStatement}`),
+    or: (andStatement: string) =>
+      whereQueryFacory(columns, table, `${whereStatement} OR ${andStatement}`),
   });
 
 const fromFactory =
