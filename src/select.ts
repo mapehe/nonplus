@@ -20,36 +20,39 @@ type ToStringFactoryParams = WhereFactoryParams & {
   joins?: string;
 };
 
+type WhereQueryFactoryParams = ToStringFactoryParams;
+
 type InnerJoinFactoryParams = WhereFactoryParams;
 
-const toStringFactory =
+const renderFactory =
   ({ columns, table, whereClause }: ToStringFactoryParams) =>
   () =>
     `SELECT ${columns.join(", ")} FROM ${table}${
       whereClause ? ` WHERE ${whereClause}` : ""
     }`;
 
-const whereQueryFacory = (
-  columns: string[],
-  table: string,
-  whereClause: string
-): WhereQuery => ({
-  render: toStringFactory({ columns, table, whereClause }),
+const whereQueryFacory = ({
+  columns,
+  table,
+  whereClause,
+}: WhereQueryFactoryParams): WhereQuery => ({
+  render: renderFactory({ columns, table, whereClause }),
   and: (andClause: string) =>
-    whereQueryFacory(columns, table, `${whereClause} AND ${andClause}`),
+    whereQueryFacory({
+      columns,
+      table,
+      whereClause: `${whereClause} AND ${andClause}`,
+    }),
   or: (orClause: string) =>
-    whereQueryFacory(columns, table, `${whereClause} OR ${orClause}`),
+    whereQueryFacory({
+      columns,
+      table,
+      whereClause: `${whereClause} OR ${orClause}`,
+    }),
 });
 
-const whereFactory =
-  ({ columns, table }: WhereFactoryParams) =>
-  (whereClause: string) => ({
-    render: toStringFactory({ columns, table, whereClause }),
-    and: (andClause: string) =>
-      whereQueryFacory(columns, table, `${whereClause} AND ${andClause}`),
-    or: (orClause: string) =>
-      whereQueryFacory(columns, table, `${whereClause} OR ${orClause}`),
-  });
+const whereFactory = (params: WhereFactoryParams) => (whereClause: string) =>
+  whereQueryFacory({ ...params, whereClause });
 
 const appendJoinCondition = (table: string, joinCondition: string) =>
   `${table} ON ${joinCondition}`;
@@ -60,7 +63,7 @@ const onFactory =
     const table = appendJoinCondition(incompleteTarget, joinCondition);
     const params = { columns, table };
     return {
-      render: toStringFactory(params),
+      render: renderFactory(params),
       where: whereFactory(params),
       innerJoin: innerJoinFactory(params),
     };
@@ -75,7 +78,7 @@ const innerJoinFactory =
 const fromFactory =
   ({ columns }: FromFactoryParams) =>
   (table: string): Query => ({
-    render: toStringFactory({ columns, table }),
+    render: renderFactory({ columns, table }),
     where: whereFactory({ columns, table }),
     innerJoin: innerJoinFactory({ columns, table }),
   });
