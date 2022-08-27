@@ -39,6 +39,7 @@ module.exports = {
     "@typescript-eslint/no-shadow": ["error"],
     "no-magic-numbers": 0,
     "id-match": 0,
+    "id-length": 0,
     "no-use-before-define": 0,
   },
   settings: {
